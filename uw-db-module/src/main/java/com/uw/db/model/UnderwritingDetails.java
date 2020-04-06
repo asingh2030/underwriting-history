@@ -13,12 +13,10 @@ public class UnderwritingDetails implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String underwriterName;
-    private ApplicationDetails appDetails;
+    private Long appId;
     private UWStatus status;
     private boolean isHealth;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Document> documentsList;
+    private int rulesetVersion;
 
     public Long getId() {
         return id;
@@ -34,14 +32,6 @@ public class UnderwritingDetails implements Serializable {
 
     public void setUnderwriterName(String underwriterName) {
         this.underwriterName = underwriterName;
-    }
-
-    public ApplicationDetails getAppDetails() {
-        return appDetails;
-    }
-
-    public void setAppDetails(ApplicationDetails appDetails) {
-        this.appDetails = appDetails;
     }
 
     public UWStatus getStatus() {
@@ -60,11 +50,19 @@ public class UnderwritingDetails implements Serializable {
         isHealth = health;
     }
 
-    public List<Document> getDocumentsList() {
-        return documentsList;
+    public Long getAppId() {
+        return appId;
     }
 
-    public void setDocumentsList(List<Document> documentsList) {
-        this.documentsList = documentsList;
+    public void setAppId(Long appId) {
+        this.appId = appId;
+    }
+
+    public int getRulesetVersion() {
+        return rulesetVersion;
+    }
+
+    public void setRulesetVersion(int rulesetVersion) {
+        this.rulesetVersion = rulesetVersion;
     }
 }

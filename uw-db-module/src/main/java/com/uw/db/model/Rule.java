@@ -2,7 +2,6 @@ package com.uw.db.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Map;
 import java.util.Objects;
 
 @Entity
@@ -15,7 +14,8 @@ public class Rule implements Serializable {
     private int version;
     private String name;
     private String ruleDesc;
-    private Map<String, Object> parameters;
+    //TODO: store all parameters map into string - write conversion
+    private String parameters;
 
     Rule(Long id, int version, String name){
         this.id=id;
@@ -55,11 +55,11 @@ public class Rule implements Serializable {
         this.ruleDesc = ruleDesc;
     }
 
-    public Map<String, Object> getParameters() {
+    public String getParameters() {
         return parameters;
     }
 
-    public void setParameters(Map<String, Object> parameters) {
+    public void setParameters(String parameters) {
         this.parameters = parameters;
     }
 

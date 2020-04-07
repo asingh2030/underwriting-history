@@ -17,6 +17,13 @@ public class Document implements Serializable {
     private DocumentType documentType;
     private File documentDetails;//TODO: use as file, write file to blob and vise-versa converter
     private Long applicationId;
+    @JoinColumn(name = "id", nullable = false)
+    private Long uwId;
+    @JoinColumn(name = "ssn", nullable = false)
+    private String customerId;
+
+    protected Document(){
+    }
 
     public Document(Long id, String documentName, DocumentType documentType, File documentDetails, Long applicationId) {
         this.id = id;
@@ -64,6 +71,22 @@ public class Document implements Serializable {
 
     public void setDocumentDetails(File documentDetails) {
         this.documentDetails = documentDetails;
+    }
+
+    public Long getUwId() {
+        return uwId;
+    }
+
+    public void setUwId(Long uwId) {
+        this.uwId = uwId;
+    }
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     @Override

@@ -1,15 +1,13 @@
-package com.uw.db;
+package com.uw;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/*
 @SpringBootApplication
-public class DbModuleApplication {
+public class UwServiceModuleApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DbModuleApplication.class, args);
+		SpringApplication.run(UwServiceModuleApplication.class, args);
 	}
 
 }
-*/

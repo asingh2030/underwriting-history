@@ -1,50 +1,38 @@
-package com.uw.db.model;
+package com.uw.model;
 
 import com.uw.db.util.UWStatus;
+import org.apache.commons.lang.builder.ToStringBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 
-@Entity
-@Table(name = "UW_DETAILS")
-public class UnderwritingDetails implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class UnderwritingDetailsModel implements Serializable {
     private Long id;
     private String underwriterName;
     private String description;
-    private Date createdDate;
-    private Date modifiedDate;
+    private LocalDate createdDate;
+    private LocalDate modifiedDate;
     private Long appId;
     private UWStatus status;
     private int rulesetVersion;
     private int score;
-    @Basic(fetch = FetchType.LAZY)
-    private Underwriter underwriter;
-    @OneToMany(mappedBy = "uwId", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    private List<Document> documentsList;
+    private UnderwriterModel underwriter;
 
-    UnderwritingDetails(){
-        this.createdDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
-    }
-    public Date getCreatedDate() {
+    public LocalDate getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(LocalDate createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Date getModifiedDate() {
+    public LocalDate getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(Date modifiedDate) {
+    public void setModifiedDate(LocalDate modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 
@@ -56,19 +44,11 @@ public class UnderwritingDetails implements Serializable {
         this.score = score;
     }
 
-    public List<Document> getDocumentsList() {
-        return documentsList;
-    }
-
-    public void setDocumentsList(List<Document> documentsList) {
-        this.documentsList = documentsList;
-    }
-
-    public Underwriter getUnderwriter() {
+    public UnderwriterModel getUnderwriter() {
         return underwriter;
     }
 
-    public void setUnderwriter(Underwriter underwriter) {
+    public void setUnderwriter(UnderwriterModel underwriter) {
         this.underwriter = underwriter;
     }
 
@@ -118,5 +98,10 @@ public class UnderwritingDetails implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

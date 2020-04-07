@@ -4,22 +4,42 @@ import com.uw.db.util.ApplicationStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "APP_DETAILS")
 public class ApplicationDetails implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String customerId;
-    private LocalDateTime createdTime;
+    @Temporal(TemporalType.DATE)
+    private Date createdDate;
     private String createdBy;
-    //TODO: move applicaiton modification details to another class and nade relation between them
-    private LocalDateTime modifiedTime;
+    @Temporal(TemporalType.DATE)
+    private Date modifiedDate;
     private String modifiedBy;
     private ApplicationStatus status;
+
+    public String getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
+    }
+
+    public ApplicationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ApplicationStatus status) {
+        this.status = status;
+    }
 
     protected ApplicationDetails(){
     }
@@ -27,7 +47,7 @@ public class ApplicationDetails implements Serializable {
     public ApplicationDetails(Long id, String customerId, String createdBy) {
         this.id = id;
         this.customerId = customerId;
-        this.createdTime = LocalDateTime.now();
+        this.createdDate = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
         this.createdBy = createdBy;
         this.status = ApplicationStatus.INIT;
     }
@@ -48,12 +68,12 @@ public class ApplicationDetails implements Serializable {
         this.customerId = customerId;
     }
 
-    public LocalDateTime getCreatedTime() {
-        return createdTime;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreatedTime(LocalDateTime createdTime) {
-        this.createdTime = createdTime;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getCreatedBy() {
@@ -64,12 +84,12 @@ public class ApplicationDetails implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getModifiedTime() {
-        return modifiedTime;
+    public Date getModifiedDate() {
+        return modifiedDate;
     }
 
-    public void setModifiedTime(LocalDateTime modifiedTime) {
-        this.modifiedTime = modifiedTime;
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 
     public String getModifiedBy() {
@@ -87,11 +107,11 @@ public class ApplicationDetails implements Serializable {
         ApplicationDetails that = (ApplicationDetails) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(customerId, that.customerId) &&
-                Objects.equals(createdTime, that.createdTime);
+                Objects.equals(createdDate, that.createdDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customerId, createdTime);
+        return Objects.hash(id, customerId, createdDate);
     }
 }

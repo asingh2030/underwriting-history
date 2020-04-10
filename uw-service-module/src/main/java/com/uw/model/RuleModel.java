@@ -1,35 +1,31 @@
 package com.uw.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Map;
-import java.util.Objects;
 
+@ApiModel("Underwriting rule related details.")
 public class RuleModel implements Serializable {
+    @ApiModelProperty(value = "Unique id of rule.")
     private Long id;
-    private int version;
+    @ApiModelProperty(value = "version of rule.")
+    private int rulesetVersion;
+    @ApiModelProperty(value = "Name of rule.")
     private String name;
+    @ApiModelProperty(value = "Rule description.")
     private String ruleDesc;
     //TODO: store all parameters map into string - write conversion
+    @ApiModelProperty(value = "Configurable parameters.")
     private Map<String, String> parameters;
-    private Long rulesetId;
 
-    protected RuleModel(){
-
+    public RuleModel(){
     }
-    RuleModel(Long id, int version, String name){
-        this.id=id;
+    public RuleModel(int version, String name){
         this.name=name;
-        this.version=version;
-    }
-    public Long getRulesetId() {
-        return rulesetId;
-    }
-
-    public void setRulesetId(Long rulesetId) {
-        this.rulesetId = rulesetId;
+        this.rulesetVersion =version;
     }
     public Long getId() {
         return id;
@@ -39,12 +35,12 @@ public class RuleModel implements Serializable {
         this.id = id;
     }
 
-    public int getVersion() {
-        return version;
+    public int getRulesetVersion() {
+        return rulesetVersion;
     }
 
-    public void setVersion(int version) {
-        this.version = version;
+    public void setRulesetVersion(int rulesetVersion) {
+        this.rulesetVersion = rulesetVersion;
     }
 
     public String getName() {

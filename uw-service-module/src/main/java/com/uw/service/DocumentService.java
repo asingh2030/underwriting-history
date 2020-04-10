@@ -1,6 +1,6 @@
 package com.uw.service;
 
-import com.uw.db.model.Document;
+import com.uw.db.entities.Document;
 import com.uw.db.repo.DocumentRepository;
 import com.uw.model.DocumentModel;
 import org.springframework.beans.BeanUtils;
@@ -17,7 +17,7 @@ public class DocumentService {
     @Autowired
     private DocumentRepository repository;
 
-    private List<DocumentModel> getDocumentModels(List<Document> docList) {
+    public List<DocumentModel> getDocumentModels(List<Document> docList) {
         if (docList != null) {
             return docList.stream().map(DocumentService::mapToDocModel).collect(Collectors.toList());
         }

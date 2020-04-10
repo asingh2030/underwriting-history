@@ -1,7 +1,6 @@
 package com.uw.db.repo;
 
-import com.uw.db.model.Customer;
-import com.uw.db.model.Document;
+import com.uw.db.entities.Document;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

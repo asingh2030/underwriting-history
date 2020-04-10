@@ -1,17 +1,22 @@
 package com.uw.model;
 
-import javax.persistence.*;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.*;
-
+@ApiModel("Underwriting ruleset details.")
 public class RuleSetModel implements Serializable {
+    @ApiModelProperty(notes="Ruleset unique identifier.")
     private Long id;
+    @ApiModelProperty(notes="Ruleset unique version.")
     private int version;
+    @ApiModelProperty(notes="Rules group in this ruleset.")
     private Set<RuleModel> rules;
-    private LocalDate createdDate;
+    @ApiModelProperty(notes="Ruleset created date.")
+    private Date createdDate;
 
-    public RuleSetModel(int version, List<RuleModel> rules, LocalDate createdDate) {
+    public RuleSetModel(int version, List<RuleModel> rules, Date createdDate) {
         this.version = version;
         this.rules = new HashSet<>();
         this.rules.addAll(rules);
@@ -46,11 +51,11 @@ public class RuleSetModel implements Serializable {
         this.rules.addAll(rules);
     }
 
-    public LocalDate getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    protected void setCreatedDate(LocalDate createdDate) {
+    protected void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 }

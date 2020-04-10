@@ -1,19 +1,29 @@
 package com.uw.model;
 
 
-import com.uw.db.model.Document;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.util.List;
-
+import java.util.Date;
+@ApiModel("Customer details.")
 public class CustomerModel implements Serializable {
+    @ApiModelProperty(notes="Customer identifier SSN.")
+    @NotNull
     private String ssn;
+    @ApiModelProperty(notes="Customer name.")
+    @NotNull
     private String name;
+    @ApiModelProperty(notes="Customer gender.")
+    @NotNull
     private String gender;
-    private LocalDate dob;
-    private String address;
+    @ApiModelProperty(notes="Customer date of birth.")
+    @NotNull
+    @Past
+    private Date dob;
 
     public String getSsn() {
         return ssn;
@@ -39,20 +49,12 @@ public class CustomerModel implements Serializable {
         this.gender = gender;
     }
 
-    public LocalDate getDob() {
+    public Date getDob() {
         return dob;
     }
 
-    public void setDob(LocalDate dob) {
+    public void setDob(Date dob) {
         this.dob = dob;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     @Override

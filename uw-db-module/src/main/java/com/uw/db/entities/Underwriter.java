@@ -1,39 +1,22 @@
-package com.uw.model;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang.builder.ToStringBuilder;
+package com.uw.db.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
-@ApiModel("Underwriter related information.")
-public class UnderwriterModel implements Serializable {
-    @ApiModelProperty(notes="Underwriter unique identifier in application.")
-    private Long id;
-    @ApiModelProperty(notes="Underwriter business details.")
+
+@Entity
+@Table(name = "UNDERWRITER")
+public class Underwriter implements Serializable {
     private String businessDetails;
-    @ApiModelProperty(notes="Underwriter business type.")
     private String businessType;
-    @ApiModelProperty(notes="Underwriter business category.")
     private String businessCategory;
-    @ApiModelProperty(notes="Underwriter business name.")
+    @Id
+    @JoinColumn(name = "id")
     private String businessName;
-    @ApiModelProperty(notes="Underwriter business account.")
     private String businessAcc;
-    @ApiModelProperty(notes="Underwriter business tax identifier.")
     private String taxId;
-    @ApiModelProperty(notes="Underwriter business address.")
     private String businessAddress;
-    @ApiModelProperty(notes="Underwriter business channel.")
     private String underwriterChannel;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getBusinessDetails() {
         return businessDetails;
@@ -99,8 +82,4 @@ public class UnderwriterModel implements Serializable {
         this.underwriterChannel = underwriterChannel;
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
 }

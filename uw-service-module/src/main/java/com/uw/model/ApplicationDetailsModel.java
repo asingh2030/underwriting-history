@@ -1,20 +1,41 @@
 package com.uw.model;
 
 import com.uw.db.util.ApplicationStatus;
+import com.uw.db.util.UWStatus;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
+import java.util.Date;
+@ApiModel(description="All details about the customer underwriting details. ")
 public class ApplicationDetailsModel implements Serializable {
+    @ApiModelProperty(notes="Customer application identifier.")
     private Long id;
+    @ApiModelProperty(notes="Customer SSN.")
+    @NotNull
     private String customerId;
-    private LocalDate createdDate;
+    @ApiModelProperty(notes="Application created date.")
+    @Past
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date createdDate;
+    @ApiModelProperty(notes="Application crearted by insurance manager name.")
     private String createdBy;
-    private LocalDate modifiedDate;
+    @ApiModelProperty(notes="Application last modified date.")
+    @Past
+    @DateTimeFormat(pattern="yyyy-MM-dd")
+    private Date modifiedDate;
+    @ApiModelProperty(notes="Customer address when he's applied for underwriting.")
+    private String customerAddress;
+    @ApiModelProperty(notes="Application last modified by.")
     private String modifiedBy;
+    @ApiModelProperty(notes="Application status.")
+    @NotNull
     private ApplicationStatus status;
+    private UnderwritingDetailsModel uwDetailsModel;
 
     public String getCustomerId() {
         return customerId;
@@ -43,19 +64,11 @@ public class ApplicationDetailsModel implements Serializable {
         this.id = id;
     }
 
-    public String getCustomer() {
-        return customerId;
-    }
-
-    public void setCustomer(String customerId) {
-        this.customerId = customerId;
-    }
-
-    public LocalDate getCreatedDate() {
+    public Date getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDate createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -67,11 +80,11 @@ public class ApplicationDetailsModel implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public LocalDate getModifiedDate() {
+    public Date getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(LocalDate modifiedDate) {
+    public void setModifiedDate(Date modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 
@@ -86,5 +99,21 @@ public class ApplicationDetailsModel implements Serializable {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    public UnderwritingDetailsModel getUwDetailsModel() {
+        return uwDetailsModel;
+    }
+
+    public void setUwDetailsModel(UnderwritingDetailsModel uwDetailsModel) {
+        this.uwDetailsModel = uwDetailsModel;
+    }
+
+    public String getCustomerAddress() {
+        return customerAddress;
+    }
+
+    public void setCustomerAddress(String customerAddress) {
+        this.customerAddress = customerAddress;
     }
 }

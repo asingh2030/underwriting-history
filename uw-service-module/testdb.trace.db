@@ -1,0 +1,3 @@
+2020-04-11 01:59:43 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DOCUMENTS" not found; SQL statement:
+delete FROM DOCUMENTS [42102-200]

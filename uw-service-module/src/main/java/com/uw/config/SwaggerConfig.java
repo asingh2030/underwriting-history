@@ -18,7 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
 	public static final Contact DEFAULT_CONTACT = new Contact(
-			"Ashutosh Singh", "http://www.lntinfotech.com", "ashutoshn.singh@lntinfotech.com");
+			"Northern Lights", "http://www.lntinfotech.com", "ashutoshn.singh@lntinfotech.com");
 	
 	public static final ApiInfo DEFAULT_API_INFO = new ApiInfo(
 			"Consumer underwriting history", "Consumer Underwriting history API Description", "1.0",

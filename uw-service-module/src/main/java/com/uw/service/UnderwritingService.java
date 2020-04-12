@@ -77,8 +77,8 @@ public class UnderwritingService {
 
     private UnderwritingDetails getUnderwritingDetails(Long appId, UnderwritingDetailsModel uwDetailsModel, String underwriterName) {
         UnderwritingDetails uwDetails = new UnderwritingDetails ();
-        uwDetails.setAppId(appId);
         BeanUtils.copyProperties (uwDetailsModel,uwDetails);
+        uwDetails.setAppId(appId);
         uwDetails.setStatus(uwDetailsModel.getStatus());
         uwDetails.setUnderwriterName (underwriterName);
         if(uwDetailsModel.getFailedRules() != null && !uwDetailsModel.getFailedRules().isEmpty()){

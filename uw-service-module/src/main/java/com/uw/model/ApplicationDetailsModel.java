@@ -1,7 +1,6 @@
 package com.uw.model;
 
-import com.uw.db.util.ApplicationStatus;
-import com.uw.db.util.UWStatus;
+import com.uw.util.ApplicationStatus;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.ToStringBuilder;

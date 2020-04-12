@@ -1,15 +1,12 @@
 package com.uw.model;
 
-import com.uw.db.util.DocumentType;
+import com.uw.util.DocumentType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.io.File;
 import java.io.Serializable;
-import java.util.Objects;
+
 @ApiModel("Documents involved in underwriting application.")
 public class DocumentModel implements Serializable {
     @ApiModelProperty(notes="Document unique indentifier.")

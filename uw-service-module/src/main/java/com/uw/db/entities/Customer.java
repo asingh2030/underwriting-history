@@ -18,6 +18,7 @@ public class Customer implements Serializable {
     private String name;
     private String gender;
     private Date dob;
+    private String address;
 
     public String getSsn() {
         return ssn;
@@ -72,5 +73,13 @@ public class Customer implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(getSsn());
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

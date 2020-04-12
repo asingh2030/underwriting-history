@@ -20,6 +20,9 @@ public class CustomerModel implements Serializable {
     @ApiModelProperty(notes="Customer gender.")
     @NotNull
     private String gender;
+    @ApiModelProperty(notes="Customer address.")
+    @NotNull
+    private String address;
     @ApiModelProperty(notes="Customer date of birth.")
     @NotNull
     @Past
@@ -60,5 +63,13 @@ public class CustomerModel implements Serializable {
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

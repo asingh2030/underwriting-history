@@ -12,8 +12,6 @@ import java.io.Serializable;
 import java.util.Date;
 @ApiModel(description="All details about the customer underwriting details. ")
 public class ApplicationDetailsModel implements Serializable {
-    @ApiModelProperty(notes="Customer application identifier.")
-    private Long id;
     @ApiModelProperty(notes="Customer SSN.")
     @NotNull
     private String customerId;
@@ -55,14 +53,6 @@ public class ApplicationDetailsModel implements Serializable {
     public ApplicationDetailsModel(){
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -95,11 +85,6 @@ public class ApplicationDetailsModel implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
     public UnderwritingDetailsModel getUwDetailsModel() {
         return uwDetailsModel;
     }
@@ -115,4 +100,10 @@ public class ApplicationDetailsModel implements Serializable {
     public void setCustomerAddress(String customerAddress) {
         this.customerAddress = customerAddress;
     }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
 }

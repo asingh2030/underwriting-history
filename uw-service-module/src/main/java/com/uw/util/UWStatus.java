@@ -1,5 +1,5 @@
 package com.uw.util;
 
 public enum UWStatus {
-        VERIFIED, FAILED;
+        VERIFIED, CANCELED, REJECTED;
     }

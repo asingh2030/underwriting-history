@@ -7,8 +7,6 @@ import java.io.Serializable;
 import java.util.*;
 @ApiModel("Underwriting ruleset details.")
 public class RuleSetModel implements Serializable {
-    @ApiModelProperty(notes="Ruleset unique identifier.")
-    private Long id;
     @ApiModelProperty(notes="Ruleset unique version.")
     private int version;
     @ApiModelProperty(notes="Rules group in this ruleset.")
@@ -21,14 +19,6 @@ public class RuleSetModel implements Serializable {
         this.rules = new HashSet<>();
         this.rules.addAll(rules);
         this.createdDate = createdDate;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    protected void setId(Long id) {
-        this.id = id;
     }
 
     public int getVersion() {

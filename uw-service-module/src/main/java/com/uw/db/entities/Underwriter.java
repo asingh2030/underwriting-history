@@ -1,25 +1,29 @@
 package com.uw.db.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "UNDERWRITER")
 public class Underwriter implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private String businessDetails;
     private String businessType;
     private String businessCategory;
-    @Id
-    @JoinColumn(name = "id")
     private String businessName;
     private String businessAcc;
     private String taxId;
     private String businessAddress;
     private String underwriterChannel;
 
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getBusinessDetails() {
         return businessDetails;

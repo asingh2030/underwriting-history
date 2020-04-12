@@ -22,7 +22,9 @@ public class CustomerRepoTest {
             Date dob = new SimpleDateFormat("dd/MM/yyyy").parse(dobString);
             String ssn1 = "1111111111";
             Customer cus = new Customer(ssn1, "Customer1", "male", dob);
+            cus.setAddress("Pune, India");
             Customer savedCus = custRepo.save(cus);
+
             Assertions.assertNotNull(savedCus,"Saved customer cann't be null.");
 
             Customer bySsn = custRepo.findBySsn(ssn1);

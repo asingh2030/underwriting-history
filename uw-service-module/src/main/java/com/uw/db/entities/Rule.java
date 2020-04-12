@@ -1,6 +1,9 @@
 package com.uw.db.entities;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -10,18 +13,12 @@ import java.util.Objects;
 public class Rule implements Serializable {
     @Id
     private String name;
-
-    @JoinColumn(name = "version")
     @Id
     private int rulesetVersion;
-
     private String ruleDesc;
     private String parameters;
+
     public Rule(){}
-    public Rule(int rulesetVersion, String name){
-        this.name=name;
-        this.rulesetVersion = rulesetVersion;
-    }
 
     public int getRulesetVersion() {
         return rulesetVersion;
@@ -37,6 +34,10 @@ public class Rule implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public RuleId getRuleId(){
+        return new RuleId(rulesetVersion, name);
     }
 
     public String getRuleDesc() {
@@ -60,12 +61,11 @@ public class Rule implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Rule rule = (Rule) o;
-        return getRulesetVersion () == rule.getRulesetVersion () &&
-                getName().equals(rule.getName());
+        return getRuleId().equals(rule.getRuleId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getRulesetVersion (), getName());
+        return Objects.hash(getRuleId());
     }
 }

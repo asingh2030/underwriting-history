@@ -14,24 +14,11 @@ public class Document implements Serializable {
     private Long id;
     private String documentName;
     private DocumentType documentType;
-    @JoinColumn(name = "id", nullable = false)
     private Long appId;
-    @JoinColumn(name = "id", nullable = true)
     private Long uwId;
     private String customerId;
 
     public Document(){
-    }
-
-    public Document(String documentName, DocumentType documentType, String custId) {
-        this.documentName = documentName;
-        this.documentType = documentType;
-        this.customerId = custId;
-    }
-    public Document(String documentName, DocumentType documentType, Long uwId) {
-        this.documentName = documentName;
-        this.documentType = documentType;
-        this.uwId = uwId;
     }
 
     public DocumentType getDocumentType() {

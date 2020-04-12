@@ -12,16 +12,7 @@ public class RuleSet implements Serializable {
     private Long id;
     @Column(unique = true, nullable = false)
     private int version;
-    @OneToMany(mappedBy = "rulesetVersion", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    private Set<Rule> rules;
     private Date createdDate;
-    public RuleSet(){}
-    public RuleSet(int version, List<Rule> rules) {
-        this.version = version;
-        this.rules = new HashSet<>(rules);
-        this.createdDate = new Date ();
-    }
 
     public Long getId() {
         return id;
@@ -35,27 +26,15 @@ public class RuleSet implements Serializable {
         return version;
     }
 
-    protected void setVersion(int version) {
+    public void setVersion(int version) {
         this.version = version;
-    }
-
-    public List<Rule> getRules() {
-        List<Rule> list = new ArrayList<>(rules);
-        List<Rule> rules = Collections.unmodifiableList(list);
-        return rules;
-    }
-
-
-    protected void setRules(List<Rule> rules) {
-        this.rules = new HashSet<>();
-        this.rules.addAll(rules);
     }
 
     public Date getCreatedDate() {
         return createdDate;
     }
 
-    protected void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
 }

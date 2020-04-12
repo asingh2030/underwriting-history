@@ -4,7 +4,8 @@ import com.uw.util.ApplicationStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "APP_DETAILS")
@@ -14,39 +15,13 @@ public class ApplicationDetails implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String customerId;
-//    @Temporal(TemporalType.DATE)
     private Date createdDate;
     private String createdBy;
-//    @Temporal(TemporalType.DATE)
     private Date modifiedDate;
     private String modifiedBy;
     private ApplicationStatus status;
-    private String customerAddress;
-    @OneToMany(mappedBy = "appId", fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL)
-    private Set<Document> documentList;
-    @OneToMany(mappedBy = "appId", fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL)
-    private Set<UnderwritingDetails> uwList;
 
     public ApplicationDetails(){
-        this.createdDate = new Date();
-        this.modifiedDate = new Date();
-        this.documentList = new HashSet<>();
-        this.uwList = new HashSet<>();
-    }
-
-    public ApplicationDetails(String customerId, String createdBy) {
-        this.customerId = customerId;
-        this.createdDate = new Date();
-        this.createdBy = createdBy;
-    }
-    public List<Document> getDocumentList() {
-        return new ArrayList<>(documentList);
-    }
-
-    public void setDocumentList(List<Document> documentList) {
-        this.documentList.addAll(documentList);
     }
 
     public String getCustomerId() {
@@ -101,6 +76,10 @@ public class ApplicationDetails implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -114,32 +93,4 @@ public class ApplicationDetails implements Serializable {
         return Objects.hash(id);
     }
 
-    public List<UnderwritingDetails> getUwList() {
-        return new ArrayList<>(uwList);
-    }
-
-    public void setUwList(List<UnderwritingDetails> uwList) {
-        this.uwList.addAll(uwList);
-    }
-
-    public String getCustomerAddress() {
-        return customerAddress;
-    }
-
-    public void setCustomerAddress(String customerAddress) {
-        this.customerAddress = customerAddress;
-    }
-
-    @PrePersist
-    public void prePersist(){
-        Long appId = getId();
-        System.out.println("App Pre persist call for app id "+appId);
-        uwList.forEach(uw->uw.setAppId(appId));
-        documentList.forEach(document->document.setAppId(appId));
-    }
-
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
 }

@@ -1,10 +1,7 @@
 package com.uw.controller;
 
 import com.uw.db.entities.Customer;
-import com.uw.exception.ResourceNotFoundException;
-import com.uw.model.ApplicationDetailsModel;
-import com.uw.model.CustomerModel;
-import com.uw.model.UnderwritingDetailsModel;
+import com.uw.model.*;
 import com.uw.service.ApplicationDetailsService;
 import com.uw.service.CustomerService;
 import com.uw.service.UnderwritingService;
@@ -19,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Api(value = "CustomerUwApplicationController", description = "REST APIs related to Customer underwriting application!!!!")
 @RestController
 @RequestMapping("/customers")
@@ -45,51 +44,16 @@ public class CustomerUwApplicationController {
             @ApiResponse(code = 404, message = "not found!!!") })
     @GetMapping("/{ssn}/app-details")
     public ResponseEntity<List> getAppDetailsPerYear(@PathVariable("ssn") String ssn, @RequestParam(value = "year",required = true) int year){
-        List<ApplicationDetailsModel> appList = appService.getApplicationDetailsBySsnAndYear(ssn, year);
-//        CollectionModel<ApplicationDetailsModel> resource = new CollectionModel<>(appList);
-        //TODO: Link to getAppDetails
-//        WebMvcLinkBuilder webMvcLinkBuilder = linkTo(methodOn(CustomerUwApplicationController.class).getAppDetails());
-//        resource.add(webMvcLinkBuilder.withSelfRel());
+        List<AppDetails> appList = appService.getAppDetailsBySsnAndYear(ssn, year);
         return new ResponseEntity<>(appList, HttpStatus.OK);
     }
-
-    /*@GetMapping("/{ssn}/uw-details/{uwId}")
-    public ResponseEntity<UnderwritingDetailsModel> getUwDetails(@PathVariable("ssn") String ssn, @PathVariable("uwId") Long uwId){
-        UnderwritingDetailsModel model = uwService.getUwDetailsById(uwId);
-        if(model == null){
-            throw new ResourceNotFoundException(String.format("Given underwriting id not found - {%s}",uwId.toString()));
-        }
-//        EntityModel<UnderwritingDetailsModel> resource = new EntityModel<>(model);
-        //TODO: add hateoas link
-        return new ResponseEntity(model, HttpStatus.OK);
-    }*/
-
-    @ApiOperation(value = "Get underwriting details of given application and customer.", response = Iterable.class, tags = "getUwDetails")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success|OK"),
-            @ApiResponse(code = 404, message = "not found!!!") })
-    @GetMapping("/{ssn}/uw-details/{appId}")
-    public ResponseEntity<List> getUwDetails(@PathVariable("ssn") String ssn, @PathVariable("appId") Long appId){
-        List<UnderwritingDetailsModel> model = uwService.getAllUwDetailsByAppId (appId);
-        if(model == null){
-            throw new ResourceNotFoundException(String.format("Given application id not found - {%s}",appId.toString()));
-        }
-//        EntityModel<UnderwritingDetailsModel> resource = new EntityModel<>(model);
-        //TODO: add hateoas link
-        return new ResponseEntity(model, HttpStatus.OK);
-    }
-
-
-    @ApiOperation(value = "Get Application details of given application id and customer.", response = ApplicationDetailsModel.class, tags = "getAppDetails")
+    @ApiOperation(value = "Get underwriting application details by given application id.", response = UwDetails.class, tags = "getAppDetails")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 404, message = "not found!!!") })
     @GetMapping("/{ssn}/app-details/{appId}")
-    public ResponseEntity<ApplicationDetailsModel> getAppDetails(@PathVariable("ssn") String ssn, @PathVariable("appId") Long appId){
-        ApplicationDetailsModel model = appService.getAppDetails(appId);
-//        EntityModel<ApplicationDetailsModel> resource = new EntityModel<>(appList);
-        /*WebMvcLinkBuilder webMvcLinkBuilder = linkTo(methodOn(CustomerUwApplicationController.class).findAppDetails());
-        resource.add(webMvcLinkBuilder.withSelfRel());*/
+    public ResponseEntity<UwDetails> getAppDetails(@PathVariable("ssn") String ssn, @PathVariable(value = "appId",required = true) Long appId){
+        UwDetails model = uwService.getUwDetailsByAppId(appId);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
@@ -109,11 +73,22 @@ public class CustomerUwApplicationController {
     @GetMapping("/{ssn}")
     public HttpEntity<CustomerModel> findCustomer(@PathVariable String ssn){
         CustomerModel customer = service.getCustomerDetails(ssn);
-//        EntityModel<CustomerModel> resource = new EntityModel<CustomerModel>(customer);
-
-//        WebMvcLinkBuilder webMvcLinkBuilder = linkTo(methodOn(CustomerUwApplicationController.class).findAllCustomer());
-
-//        resource.add(webMvcLinkBuilder.withSelfRel());
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
+
+    @ApiOperation(value = "Get all customers and its applications history.", response = Customer.class, tags = "findAllHistory")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @GetMapping("/app-details/all")
+    public List<UnderwritingHistoryDetailsModel> findAll(){
+        List<CustomerModel> allCustomer = service.getAllCustomer();
+        List<UnderwritingHistoryDetailsModel> historyList = allCustomer.stream().map(customer -> {
+            List<ApplicationDetailsModel> allApp = appService.getAllAppBySsn(customer.getSsn());
+            UnderwritingHistoryDetailsModel model = new UnderwritingHistoryDetailsModel(customer, allApp);
+            return model;
+        }).collect(Collectors.toList());
+        return historyList;
+    }
 }
+

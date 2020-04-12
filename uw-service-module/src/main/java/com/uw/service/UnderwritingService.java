@@ -3,18 +3,19 @@ package com.uw.service;
 import com.uw.db.entities.Document;
 import com.uw.db.entities.Underwriter;
 import com.uw.db.entities.UnderwritingDetails;
+import com.uw.db.repo.UnderwriterRepository;
 import com.uw.db.repo.UnderwritingDetailsRepository;
-import com.uw.model.UnderwriterModel;
+import com.uw.exception.ResourceNotFoundException;
+import com.uw.model.DocumentModel;
+import com.uw.model.RuleModel;
 import com.uw.model.UnderwritingDetailsModel;
+import com.uw.model.UwDetails;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,53 +23,76 @@ public class UnderwritingService {
     @Autowired
     private UnderwritingDetailsRepository repository;
     @Autowired
-    private RuleService ruleService;
+    private UnderwriterRepository underwriterRepository;
     @Autowired
     private DocumentService documentService;
+    @Autowired
+    RuleService ruleService;
 
-    public List<UnderwritingDetailsModel> getAllUwDetailsByAppId(Long appId){
+    public UwDetails getUwDetailsByAppId(Long appId){
         Assert.notNull(appId, "Application Id is must to fetch underwriting details.");
         List<UnderwritingDetails> list = repository.findAllByAppId(appId);
-        return getUnderwritingDetailsModel(list);
+        return getUwDetails(appId, list);
     }
 
-    public UnderwritingDetailsModel getUwDetailsById(Long uwId){
-        Assert.notNull(uwId, "Given underwriting Id is must tnot null.");
-        Optional<UnderwritingDetails> optional = repository.findById(uwId);
-        if(optional.isPresent()){
-            return mapToUwModel(optional.get());
-        }
-        return null;
+    public UnderwritingDetailsModel getUwDetailsModelByAppId(Long appId){
+        Assert.notNull(appId, "Application Id is must to fetch underwriting details.");
+        List<UnderwritingDetails> list = repository.findAllByAppId(appId);
+        return getUwDetailsModel(appId, list.get(0));
     }
 
-    public List<UnderwritingDetailsModel> getUnderwritingDetailsModel(List<UnderwritingDetails> list) {
-        if (list != null) {
-            return list.stream().map(this::mapToUwModel).collect(Collectors.toList());
-        }
-        return Collections.emptyList();
+    private UnderwritingDetailsModel getUwDetailsModel(Long appId, UnderwritingDetails entity) {
+        UnderwritingDetailsModel model = new UnderwritingDetailsModel();
+        BeanUtils.copyProperties(entity, model);
+        model.setStatus(entity.getStatus());
+        model.setDocuments(documentService.getDocumentByUwId(entity.getId()));
+        return model;
     }
 
-    public UnderwritingDetailsModel mapToUwModel(UnderwritingDetails details) {
-        UnderwritingDetailsModel uwModel = new UnderwritingDetailsModel ();
-        BeanUtils.copyProperties (details, uwModel);
-
-        List<Document> documentsList = details.getDocumentsList ();
-        if(documentsList != null && !documentsList.isEmpty ()){
-            uwModel.setDocuments (documentService.getDocumentModels (documentsList));
+    private UwDetails getUwDetails(Long appId, List<UnderwritingDetails> list) {
+        if(list == null || list.isEmpty()){
+            throw new ResourceNotFoundException("Underwriting details not found belongs to given application id "+appId);
         }
+        UnderwritingDetails underwritingDetails = list.stream().findAny().get();
+        Long id = underwritingDetails.getId();
+        Underwriter underwriter = getUnderwriter(underwritingDetails.getUnderwriterName());
+        String documents = documentService.getDocumentByUwId(id).toString();
+        UwDetails model = new UwDetails(underwritingDetails.getStatus(),underwritingDetails.getDescription(), id,
+                underwritingDetails.getModifiedDate(),underwritingDetails.getRulesetVersion(),underwritingDetails.getScore(),documents,underwriter);
+        return model;
+    }
 
-        Underwriter underwriter = details.getUnderwriter ();
-        UnderwriterModel underwriterModel = new UnderwriterModel ();
-        BeanUtils.copyProperties (underwriter, underwriterModel);
-        uwModel.setUnderwriter (underwriterModel);
+    public Underwriter getUnderwriter(String underwriterName) {
+        return underwriterRepository.findOneByBusinessName(underwriterName);
+    }
 
-        int rulesetVersion = details.getRulesetVersion ();
-        uwModel.setRules (ruleService.getRules (rulesetVersion));
-        String failedRulesIds = details.getFailedRulesIds ();
-        if(failedRulesIds != null && !failedRulesIds.isEmpty ()){
-            uwModel.setFailedRules (Arrays.asList (failedRulesIds.split (",")));
+    public void save(UnderwritingDetailsModel uwDetailsModel, String ssn, Long appId) {
+        Underwriter underwriter = getUnderwriter (uwDetailsModel.getUnderwriterName());
+        validarteRuleset (uwDetailsModel);
+
+        UnderwritingDetails uwDetails = getUnderwritingDetails (appId, uwDetailsModel, underwriter.getBusinessName());
+        UnderwritingDetails savedUw = repository.save(uwDetails);
+        documentService.saveAll(uwDetailsModel.getDocuments(), ssn, appId, savedUw.getId());
+    }
+
+    private UnderwritingDetails getUnderwritingDetails(Long appId, UnderwritingDetailsModel uwDetailsModel, String underwriterName) {
+        UnderwritingDetails uwDetails = new UnderwritingDetails ();
+        uwDetails.setAppId(appId);
+        BeanUtils.copyProperties (uwDetailsModel,uwDetails);
+        uwDetails.setStatus(uwDetailsModel.getStatus());
+        uwDetails.setUnderwriterName (underwriterName);
+        if(uwDetailsModel.getFailedRules() != null && !uwDetailsModel.getFailedRules().isEmpty()){
+            uwDetails.setFailedRulesIds(uwDetailsModel.getFailedRules().toString().replace("[","").replace("]",""));
         }
-        return uwModel;
+        return uwDetails;
+    }
+
+    private void validarteRuleset(UnderwritingDetailsModel uwDetailsModel) {
+        int rulesetVersion = uwDetailsModel.getRulesetVersion ();
+        List<RuleModel> ruleSet = ruleService.getRules(rulesetVersion);
+        if(ruleSet == null || ruleSet.isEmpty()){
+            throw new IllegalArgumentException ("Given ruleset version "+rulesetVersion +" not found.");
+        }
     }
 
 }

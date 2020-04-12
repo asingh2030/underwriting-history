@@ -4,7 +4,8 @@ import com.uw.util.UWStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "UW_DETAILS")
@@ -13,27 +14,22 @@ public class UnderwritingDetails implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String description;
-    private Date createdDate;
-    private Date modifiedDate;
-    @JoinColumn(name = "id", nullable = false)
+    @Column(nullable = false)
     private Long appId;
+    @Column(nullable = false)
     private UWStatus status;
+    @Column(nullable = false)
+    private String underwriterName;
+    @Column(nullable = false)
     private int rulesetVersion;
     private String failedRulesIds;
     private int score;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "businessName")
-    private Underwriter underwriter;
-
-    @OneToMany(mappedBy = "uwId", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    private Set<Document> documentsList;
+    private Date createdDate;
+    private Date modifiedDate;
 
     public UnderwritingDetails(){
         this.createdDate = new Date();
         this.modifiedDate = new Date();
-        this.documentsList = new HashSet<>();
     }
     public String getFailedRulesIds() {
         return failedRulesIds;
@@ -64,22 +60,6 @@ public class UnderwritingDetails implements Serializable {
 
     public void setScore(int score) {
         this.score = score;
-    }
-
-    public List<Document> getDocumentsList() {
-        return new ArrayList<>(documentsList);
-    }
-
-    public void setDocumentsList(List<Document> documentsList) {
-        this.documentsList.addAll(documentsList);
-    }
-
-    public Underwriter getUnderwriter() {
-        return underwriter;
-    }
-
-    public void setUnderwriter(Underwriter underwriter) {
-        this.underwriter = underwriter;
     }
 
     public Long getId() {
@@ -122,11 +102,12 @@ public class UnderwritingDetails implements Serializable {
         this.description = description;
     }
 
-    @PrePersist
-    public void prePersist(){
-        Long uwId = getId();
-        System.out.println("App Pre persist call for app id "+uwId);
-        documentsList.forEach(document->document.setUwId(uwId));
+    public String getUnderwriterName() {
+        return underwriterName;
+    }
+
+    public void setUnderwriterName(String underwriterName) {
+        this.underwriterName = underwriterName;
     }
 
     @Override
@@ -141,4 +122,5 @@ public class UnderwritingDetails implements Serializable {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

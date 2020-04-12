@@ -13,8 +13,8 @@ import java.util.List;
 
 @ApiModel("Underwriting details.")
 public class UnderwritingDetailsModel implements Serializable {
-    @ApiModelProperty("Underwriting unique indentifier")
-    private Long id;
+    @ApiModelProperty("Underwriting created date.")
+    private Long appId;
     @ApiModelProperty("Underwriting short description like reason of rejection.")
     private String description;
     @ApiModelProperty("Underwriting created date.")
@@ -25,8 +25,6 @@ public class UnderwritingDetailsModel implements Serializable {
     @Past
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date modifiedDate;
-    @ApiModelProperty("Underwriting application unique identifier.")
-    private Long appId;
     @ApiModelProperty(value = "Underwriting status", allowableValues = "INIT, IN_PROGRESS, ON_HOLD, FAILED, COMPLETED")
     private UWStatus status;
     @ApiModelProperty("Underwriting ruleset version.")
@@ -39,18 +37,8 @@ public class UnderwritingDetailsModel implements Serializable {
     private String underwriterName;
     @ApiModelProperty(value = "List of all failed rules while performing underwriting of associated ruleset version.")
     private List<DocumentModel> documents;
-    @ApiModelProperty(value = "List of all rules of given rulset version executed while doing underwriting.")
-    private List<RuleModel> rules;
-    private UnderwriterModel underwriter;
 
 
-    public List<RuleModel> getRules() {
-        return rules;
-    }
-
-    public void setRules(List<RuleModel> rules) {
-        this.rules = rules;
-    }
 
     public List<String> getFailedRules() {
         return failedRules;
@@ -84,36 +72,12 @@ public class UnderwritingDetailsModel implements Serializable {
         this.score = score;
     }
 
-    public UnderwriterModel getUnderwriter() {
-        return underwriter;
-    }
-
-    public void setUnderwriter(UnderwriterModel underwriter) {
-        this.underwriter = underwriter;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public UWStatus getStatus() {
         return status;
     }
 
     public void setStatus(UWStatus status) {
         this.status = status;
-    }
-
-    public Long getAppId() {
-        return appId;
-    }
-
-    public void setAppId(Long appId) {
-        this.appId = appId;
     }
 
     public int getRulesetVersion() {
@@ -132,11 +96,6 @@ public class UnderwritingDetailsModel implements Serializable {
         this.description = description;
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this);
-    }
-
     public List<DocumentModel> getDocuments() {
         return documents;
     }
@@ -151,5 +110,18 @@ public class UnderwritingDetailsModel implements Serializable {
 
     public void setUnderwriterName(String underwriterName) {
         this.underwriterName = underwriterName;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
+    }
+
+    public Long getAppId() {
+        return appId;
+    }
+
+    public void setAppId(Long appId) {
+        this.appId = appId;
     }
 }

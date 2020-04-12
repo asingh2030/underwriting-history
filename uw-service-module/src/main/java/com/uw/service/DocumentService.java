@@ -41,4 +41,22 @@ public class DocumentService {
         List<Document> docList = repository.findByUwId(uwId);
         return getDocumentModels(docList);
     }
+    private List<Document> getDocuments(List<DocumentModel> documentModels, String ssn, Long appId, Long uwId) {
+        return documentModels.stream ().map (model -> mapToDocument(model, ssn, appId, uwId)).collect (Collectors.toList ());
+    }
+
+    private Document mapToDocument(DocumentModel documentModel, String ssn, Long appId, Long uwId) {
+        Document doc = new Document ();
+        BeanUtils.copyProperties (documentModel,doc);
+        doc.setDocumentType(documentModel.getDocumentType());
+        doc.setCustomerId(ssn);
+        doc.setAppId(appId);
+        doc.setUwId(uwId);
+        return doc;
+    }
+
+    public void saveAll(List<DocumentModel> documents, String ssn, Long appId, Long uwId) {
+        List<Document> updatedList = getDocuments(documents, ssn, appId, uwId);
+        repository.saveAll(updatedList);
+    }
 }

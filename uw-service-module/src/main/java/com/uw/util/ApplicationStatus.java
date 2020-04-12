@@ -1,5 +1,5 @@
 package com.uw.util;
 
 public enum ApplicationStatus {
-    ON_HOLD,  FAILED, COMPLETED;
+    REJECTED,  CANCELED, COMPLETED;
 }

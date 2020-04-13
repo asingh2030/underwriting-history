@@ -27,6 +27,46 @@ public class CustomerModel implements Serializable {
     @NotNull
     @Past
     private Date dob;
+    @ApiModelProperty(notes="Customer designation.")
+    private String designation;
+    @ApiModelProperty(notes="Merital status of customer.")
+    private String maritalStatus;
+    @ApiModelProperty(notes="Health status of customer.")
+    private String healthStatus;
+    @ApiModelProperty(notes="Health reason of customer.")
+    private String healthReason;
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
+
+    public String getHealthStatus() {
+        return healthStatus;
+    }
+
+    public void setHealthStatus(String healthStatus) {
+        this.healthStatus = healthStatus;
+    }
+
+    public String getHealthReason() {
+        return healthReason;
+    }
+
+    public void setHealthReason(String healthReason) {
+        this.healthReason = healthReason;
+    }
 
     public String getSsn() {
         return ssn;

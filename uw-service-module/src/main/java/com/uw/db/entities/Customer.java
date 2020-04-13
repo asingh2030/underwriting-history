@@ -19,6 +19,42 @@ public class Customer implements Serializable {
     private String gender;
     private Date dob;
     private String address;
+    private String designation;
+    private String maritalStatus;
+    private String healthStatus;
+    private String healthReason;
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
+
+    public String getHealthStatus() {
+        return healthStatus;
+    }
+
+    public void setHealthStatus(String healthStatus) {
+        this.healthStatus = healthStatus;
+    }
+
+    public String getHealthReason() {
+        return healthReason;
+    }
+
+    public void setHealthReason(String healthReason) {
+        this.healthReason = healthReason;
+    }
 
     public String getSsn() {
         return ssn;

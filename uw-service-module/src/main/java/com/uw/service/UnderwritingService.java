@@ -56,7 +56,19 @@ public class UnderwritingService {
         UnderwritingDetails underwritingDetails = list.stream().findAny().get();
         Long id = underwritingDetails.getId();
         Underwriter underwriter = getUnderwriter(underwritingDetails.getUnderwriterName());
-        String documents = documentService.getDocumentByUwId(id).toString();
+        List<DocumentModel> documentList = documentService.getDocumentByUwId(id);
+        String documents = "";
+        if(documentList != null && !documentList.isEmpty()){
+            StringBuilder sb = new StringBuilder();
+            sb.append("[ ");
+            documentList.forEach(doc->{
+                sb.append("{ ");
+                sb.append(doc.toString());
+                sb.append(" }");
+            });
+            sb.append(" ]");
+            documents = sb.toString();
+        }
         UwDetails model = new UwDetails(underwritingDetails.getStatus(),underwritingDetails.getDescription(), id,
                 underwritingDetails.getModifiedDate(),underwritingDetails.getRulesetVersion(),underwritingDetails.getScore(),documents,underwriter);
         return model;

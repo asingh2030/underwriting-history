@@ -55,7 +55,8 @@ public class UnderwritingService {
 
     private RuleDetailsModel mapToRuleDetailsModel(RuleModel r, List<String> failedRulesIds) {
         boolean isFailed = failedRulesIds.stream().anyMatch(s -> s.equals(r.getName()));
-        return new RuleDetailsModel(r.getName(),r.getRuleDesc(),r.getPoints(),isFailed?"FAILED":"SUCCESS");
+        String name = r.getName().replace("rule.","");
+        return new RuleDetailsModel(name,r.getRuleDesc(),r.getPoints(),isFailed?"FAILED":"SUCCESS");
     }
 
     public UnderwritingDetailsModel getUwDetailsModelByAppId(Long appId){

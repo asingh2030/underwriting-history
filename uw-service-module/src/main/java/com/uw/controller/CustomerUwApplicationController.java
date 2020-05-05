@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Api(value = "CustomerUwApplicationController", description = "REST APIs related to Customer underwriting application!!!!")
@@ -60,11 +61,9 @@ public class CustomerUwApplicationController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success|OK"),
             @ApiResponse(code = 404, message = "not found!!!") })
-    @GetMapping("/{ssn}/app-details/{appId}/rules/{rulesetVersion}")
-    public ResponseEntity<AppRulesModel> getRulesDetails(@PathVariable("ssn") String ssn, @PathVariable(value = "appId",required = true) Long appId,
-                                                     @PathVariable(value = "rulesetVersion",required = true) int rulesetVersion){
-        List<RuleDetailsModel> rules = uwService.getRules(appId);
-        AppRulesModel model = new AppRulesModel(ssn,appId,rules);
+    @GetMapping("/{ssn}/app-details/{appId}/rules")
+    public ResponseEntity<AppRulesModel> getRulesDetails(@PathVariable("ssn") String ssn, @PathVariable(value = "appId",required = true) Long appId){
+        AppRulesModel model = uwService.getRules(ssn, appId);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 

@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +32,7 @@ public class UnderwritingService {
         return getUwDetails(appId, list);
     }
 
-    public List<RuleDetailsModel> getRules(Long appId){
+    public AppRulesModel getRules(String ssn, Long appId){
         Assert.notNull(appId, "Application Id is must to fetch underwriting details.");
         List<UnderwritingDetails> list = repository.findAllByAppId(appId);
         if(list == null || list.isEmpty()){
@@ -52,8 +49,8 @@ public class UnderwritingService {
             failedRulesList.addAll(ruleIds!= null ? Arrays.asList(ruleIds): Collections.emptyList());
         }
         List<RuleDetailsModel> rulesList = rules.stream().map(r -> mapToRuleDetailsModel(r, failedRulesList)).collect(Collectors.toList());
-
-        return rulesList;
+        AppRulesModel response = new AppRulesModel(ssn,appId, rulesetVersion, rulesList);
+        return response;
     }
 
     private RuleDetailsModel mapToRuleDetailsModel(RuleModel r, List<String> failedRulesIds) {

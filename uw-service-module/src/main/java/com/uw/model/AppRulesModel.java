@@ -10,13 +10,24 @@ public class AppRulesModel {
     private String ssn;
     @ApiModelProperty(value = "Application indentifier.")
     private Long appId;
+    @ApiModelProperty(value = "Ruleset version.")
+    private int rulesetVersion;
     @ApiModelProperty(value = "List of rules used while process underwriting.")
     private List<RuleDetailsModel> rules;
 
-    public AppRulesModel(String ssn, Long appId, List<RuleDetailsModel> rules) {
+    public AppRulesModel(String ssn, Long appId, int version, List<RuleDetailsModel> rules) {
         this.ssn = ssn;
         this.appId = appId;
         this.rules = rules;
+        this.rulesetVersion = version;
+    }
+
+    public int getRulesetVersion() {
+        return rulesetVersion;
+    }
+
+    public void setRulesetVersion(int rulesetVersion) {
+        this.rulesetVersion = rulesetVersion;
     }
 
     public String getSsn() {

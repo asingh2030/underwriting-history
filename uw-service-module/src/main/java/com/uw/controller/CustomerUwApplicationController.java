@@ -56,6 +56,17 @@ public class CustomerUwApplicationController {
         UwDetails model = uwService.getUwDetailsByAppId(appId);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
+    @ApiOperation(value = "Get underwriting application rules by given application id.", response = AppRulesModel.class, tags = "getRules")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success|OK"),
+            @ApiResponse(code = 404, message = "not found!!!") })
+    @GetMapping("/{ssn}/app-details/{appId}/rules/{rulesetVersion}")
+    public ResponseEntity<AppRulesModel> getRulesDetails(@PathVariable("ssn") String ssn, @PathVariable(value = "appId",required = true) Long appId,
+                                                     @PathVariable(value = "rulesetVersion",required = true) int rulesetVersion){
+        List<RuleDetailsModel> rules = uwService.getRules(appId);
+        AppRulesModel model = new AppRulesModel(ssn,appId,rules);
+        return new ResponseEntity<>(model, HttpStatus.OK);
+    }
 
     @ApiOperation(value = "Get all customers.", response = Customer.class, tags = "findAllCustomer")
     @ApiResponses(value = {

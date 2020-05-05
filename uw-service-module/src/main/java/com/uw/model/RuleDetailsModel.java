@@ -8,17 +8,21 @@ import java.io.Serializable;
 import java.util.Map;
 
 @ApiModel("Underwriting rule related details.")
-public class RuleModel implements Serializable {
+public class RuleDetailsModel implements Serializable {
     @ApiModelProperty(value = "Name of rule.")
     private String name;
     @ApiModelProperty(value = "Rule description.")
     private String ruleDesc;
-    @ApiModelProperty(value = "Rule point.")
+    @ApiModelProperty(value = "Configurable points its not added while failed.")
     private int points;
-    @ApiModelProperty(value = "Configurable parameters.")
-    private Map<String, String> parameters;
+    @ApiModelProperty(value = "Execution status.")
+    private String status;
 
-    public RuleModel(){
+    public RuleDetailsModel(String name, String ruleDesc, int points, String status) {
+        this.name = name;
+        this.ruleDesc = ruleDesc;
+        this.points = points;
+        this.status = status;
     }
 
     public int getPoints() {
@@ -27,6 +31,14 @@ public class RuleModel implements Serializable {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getName() {
@@ -43,14 +55,6 @@ public class RuleModel implements Serializable {
 
     public void setRuleDesc(String ruleDesc) {
         this.ruleDesc = ruleDesc;
-    }
-
-    public Map<String, String> getParameters() {
-        return parameters;
-    }
-
-    public void setParameters(Map<String, String> parameters) {
-        this.parameters = parameters;
     }
 
     @Override

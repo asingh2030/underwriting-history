@@ -17,8 +17,17 @@ public class Rule implements Serializable {
     private int rulesetVersion;
     private String ruleDesc;
     private String parameters;
+    private int points;
 
     public Rule(){}
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
 
     public int getRulesetVersion() {
         return rulesetVersion;

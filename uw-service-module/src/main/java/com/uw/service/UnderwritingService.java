@@ -1,20 +1,20 @@
 package com.uw.service;
 
-import com.uw.db.entities.Document;
 import com.uw.db.entities.Underwriter;
 import com.uw.db.entities.UnderwritingDetails;
 import com.uw.db.repo.UnderwriterRepository;
 import com.uw.db.repo.UnderwritingDetailsRepository;
 import com.uw.exception.ResourceNotFoundException;
-import com.uw.model.DocumentModel;
-import com.uw.model.RuleModel;
-import com.uw.model.UnderwritingDetailsModel;
-import com.uw.model.UwDetails;
+import com.uw.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +33,32 @@ public class UnderwritingService {
         Assert.notNull(appId, "Application Id is must to fetch underwriting details.");
         List<UnderwritingDetails> list = repository.findAllByAppId(appId);
         return getUwDetails(appId, list);
+    }
+
+    public List<RuleDetailsModel> getRules(Long appId){
+        Assert.notNull(appId, "Application Id is must to fetch underwriting details.");
+        List<UnderwritingDetails> list = repository.findAllByAppId(appId);
+        if(list == null || list.isEmpty()){
+            throw new ResourceNotFoundException("Given application underwriting not found!");
+        }
+        UnderwritingDetails underwritingDetails = list.get(0);
+        int rulesetVersion = underwritingDetails.getRulesetVersion();
+        List<RuleModel> rules = ruleService.getRules(rulesetVersion);
+
+        String failedRulesIds = underwritingDetails.getFailedRulesIds();
+        List<String> failedRulesList = new ArrayList<>();
+        if(failedRulesIds != null && !StringUtils.isEmpty(failedRulesIds)){
+            String[] ruleIds = failedRulesIds.split(",");
+            failedRulesList.addAll(ruleIds!= null ? Arrays.asList(ruleIds): Collections.emptyList());
+        }
+        List<RuleDetailsModel> rulesList = rules.stream().map(r -> mapToRuleDetailsModel(r, failedRulesList)).collect(Collectors.toList());
+
+        return rulesList;
+    }
+
+    private RuleDetailsModel mapToRuleDetailsModel(RuleModel r, List<String> failedRulesIds) {
+        boolean isFailed = failedRulesIds.stream().anyMatch(s -> s.equals(r.getName()));
+        return new RuleDetailsModel(r.getName(),r.getRuleDesc(),r.getPoints(),isFailed?"FAILED":"SUCCESS");
     }
 
     public UnderwritingDetailsModel getUwDetailsModelByAppId(Long appId){
@@ -80,7 +106,7 @@ public class UnderwritingService {
 
     public void save(UnderwritingDetailsModel uwDetailsModel, String ssn, Long appId) {
         Underwriter underwriter = getUnderwriter (uwDetailsModel.getUnderwriterName());
-        validarteRuleset (uwDetailsModel);
+        validateRuleset (uwDetailsModel);
 
         UnderwritingDetails uwDetails = getUnderwritingDetails (appId, uwDetailsModel, underwriter.getBusinessName());
         UnderwritingDetails savedUw = repository.save(uwDetails);
@@ -94,12 +120,13 @@ public class UnderwritingService {
         uwDetails.setStatus(uwDetailsModel.getStatus());
         uwDetails.setUnderwriterName (underwriterName);
         if(uwDetailsModel.getFailedRules() != null && !uwDetailsModel.getFailedRules().isEmpty()){
+            //Rules id get saved as string
             uwDetails.setFailedRulesIds(uwDetailsModel.getFailedRules().toString().replace("[","").replace("]",""));
         }
         return uwDetails;
     }
 
-    private void validarteRuleset(UnderwritingDetailsModel uwDetailsModel) {
+    private void validateRuleset(UnderwritingDetailsModel uwDetailsModel) {
         int rulesetVersion = uwDetailsModel.getRulesetVersion ();
         List<RuleModel> ruleSet = ruleService.getRules(rulesetVersion);
         if(ruleSet == null || ruleSet.isEmpty()){
